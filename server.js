@@ -1,10 +1,12 @@
 const { config, validateEnv } = require('./src/config/env');
 const { connectDB } = require('./src/config/db');
-const app = require('./src/app');
+const { primeEsmOnlyCjsDeps } = require('./src/config/esmShim');
 
 async function start() {
   try {
     validateEnv();
+    await primeEsmOnlyCjsDeps();
+    const app = require('./src/app');
     await connectDB();
     app.listen(config.port, () => {
       // eslint-disable-next-line no-console
