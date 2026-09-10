@@ -8,6 +8,7 @@ const createPostValidation = [
   body('organization').optional({ checkFalsy: true }).trim().isLength({ max: 200 }),
   body('state').trim().notEmpty().withMessage('state is required').isLength({ max: 100 }),
   body('city').optional({ checkFalsy: true }).trim().isLength({ max: 100 }),
+  body('personPhotoUrl').optional({ checkFalsy: true }).isString().isLength({ max: 2000 }),
   body('description')
     .trim()
     .notEmpty()

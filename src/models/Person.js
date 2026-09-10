@@ -5,6 +5,7 @@ const personSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     designation: { type: String, trim: true, default: '' },
     organization: { type: String, trim: true, default: '' },
+    photoUrl: { type: String, trim: true, default: '' },
     location: {
       state: { type: String, required: true, trim: true },
       city: { type: String, trim: true, default: '' },

@@ -18,6 +18,7 @@ const postSchema = new mongoose.Schema(
       name: { type: String, required: true },
       designation: { type: String, default: '' },
       organization: { type: String, default: '' },
+      photoUrl: { type: String, default: '' },
       state: { type: String, required: true },
       city: { type: String, default: '' },
     },

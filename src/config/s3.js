@@ -13,6 +13,12 @@ function getS3Client() {
   if (!client) {
     client = new S3Client({
       region: config.aws.region,
+      // AWS SDK v3.729+ computes a request checksum by default ("WHEN_SUPPORTED"),
+      // which gets baked into presigned PutObject URLs (x-amz-checksum-crc32 /
+      // x-amz-sdk-checksum-algorithm query params). The browser's plain PUT never
+      // sends a matching checksum header, so the signature no longer matches and
+      // S3 returns 403. "WHEN_REQUIRED" restores the pre-3.729 behavior.
+      requestChecksumCalculation: 'WHEN_REQUIRED',
       credentials:
         config.aws.accessKeyId && config.aws.secretAccessKey
           ? {

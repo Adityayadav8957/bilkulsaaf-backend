@@ -16,11 +16,20 @@ const { parseLimit, decodeCursor, encodeCursor } = require('../utils/pagination'
  * the document the other request created.
  * @returns {Promise<import('mongoose').Document>} the Person document
  */
-async function findOrCreatePerson({ name, designation, organization, state, city }) {
+async function findOrCreatePerson({ name, designation, organization, state, city, photoUrl }) {
   const slugKey = normalizeToSlugKey(name, organization, state);
 
   const existing = await Person.findOne({ slugKey });
-  if (existing) return existing;
+  if (existing) {
+    // A later post can add a photo for a person that doesn't have one yet,
+    // but never overwrites one that's already set (first photo wins, so a
+    // report can't be used to quietly swap someone else's picture out).
+    if (photoUrl && !existing.photoUrl) {
+      existing.photoUrl = photoUrl;
+      await existing.save();
+    }
+    return existing;
+  }
 
   const baseSlug = toUrlSlug(name, city, state) || 'citizen';
 
@@ -35,6 +44,7 @@ async function findOrCreatePerson({ name, designation, organization, state, city
             name: name.trim(),
             designation: (designation || '').trim(),
             organization: (organization || '').trim(),
+            photoUrl: (photoUrl || '').trim(),
             location: { state: state.trim(), city: (city || '').trim() },
             slugKey,
             slug,

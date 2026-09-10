@@ -27,7 +27,8 @@ function sanitizeText(text) {
  * bumps the person's postsCount.
  */
 async function createPost(authorId, payload) {
-  const { personName, designation, organization, state, city, description, media } = payload;
+  const { personName, designation, organization, state, city, description, media, personPhotoUrl } =
+    payload;
 
   const person = await findOrCreatePerson({
     name: personName,
@@ -35,6 +36,7 @@ async function createPost(authorId, payload) {
     organization,
     state,
     city,
+    photoUrl: personPhotoUrl,
   });
 
   const slug = await ensureUniqueSlug(Post, toUrlSlug(person.name) || 'report', {
@@ -48,6 +50,7 @@ async function createPost(authorId, payload) {
       name: person.name,
       designation: person.designation,
       organization: person.organization,
+      photoUrl: person.photoUrl,
       state: person.location.state,
       city: person.location.city,
     },
