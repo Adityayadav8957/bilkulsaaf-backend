@@ -2,10 +2,9 @@ const { config, validateEnv } = require('./src/config/env');
 const { connectDB } = require('./src/config/db');
 const app = require('./src/app');
 
-validateEnv();
-
 async function start() {
   try {
+    validateEnv();
     await connectDB();
     app.listen(config.port, () => {
       // eslint-disable-next-line no-console

@@ -28,14 +28,16 @@ const config = {
 /**
  * Validates presence of critical env vars. Only hard-fails in production so
  * local development / smoke tests (which don't need a live DB) still work.
+ *
+ * Throws rather than calling process.exit() — on a serverless platform the
+ * same warm process can serve other concurrent invocations, so killing the
+ * process here would take those down too.
  */
 function validateEnv() {
   if (config.nodeEnv === 'production') {
     const missing = REQUIRED_IN_PRODUCTION.filter((key) => !process.env[key]);
     if (missing.length > 0) {
-      // eslint-disable-next-line no-console
-      console.error(`Missing required environment variables: ${missing.join(', ')}`);
-      process.exit(1);
+      throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
     }
   }
 }
