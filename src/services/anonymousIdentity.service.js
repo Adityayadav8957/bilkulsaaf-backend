@@ -19,7 +19,7 @@ async function generateAnonymousIdentity() {
   return {
     label: 'Citizen',
     number,
-    displayName: `Anonymous Citizen #${number}`,
+    displayName: `Genz #${number}`,
   };
 }
 
